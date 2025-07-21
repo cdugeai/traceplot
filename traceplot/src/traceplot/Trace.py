@@ -29,24 +29,19 @@ class Trace:
     background_bbox: BoundingBox
     fig: plt.Figure
     ax: plt.Axes
+    points_px: [Point]
+    elevation: [float]
 
     def __init__(
         self,
         background_img_bbox: BoundingBox,
-        name: str,
-        points: [PointGeo],
+        points_geo: [PointGeo],
     ):
         FIGSIZE = (10, 10)
-        self.background_bbox = background_img_bbox
-        [minx, miny, maxx, maxy] = background_img_bbox
-        elevation: [float] = [p.ele for p in points]
-        print("elevation", elevation)
 
-        self.points_px: [Point] = [
-            ((p.lng - minx) / (maxx - minx), (p.lat - miny) / (maxy - miny))
-            for p in points
-        ]
-        print("points_px", self.points_px)
+        self.background_bbox = background_img_bbox
+        self.points_px: [Point] = self._convertPointGeotoPx(points_geo)
+        self.elevation: [float] = self._extractElevation(points_geo)
 
         self.fig, self.ax = plt.subplots(figsize=FIGSIZE)
         self.fig.subplots_adjust(top=1, bottom=0, left=0, right=1, wspace=0)
@@ -54,6 +49,13 @@ class Trace:
         print("fig", self.fig)
 
         pass
+
+    def _convertPointGeotoPx(self, points_geo):
+        [minx, miny, maxx, maxy] = self.background_bbox
+        return [pointGeoToPoint(p, minx, miny, maxx, maxy) for p in points_geo]
+    
+    def _extractElevation(self, points_geo):
+        return [p.ele for p in points_geo]
 
     def addMarker(
         self,
@@ -103,7 +105,6 @@ class Trace:
 
     def addElevationGraph(
         self,
-        points: [PointGeo],
         height_pct: float,
         backgroundColor: str,
         backgroundColorAlpha: float,
@@ -126,15 +127,14 @@ class Trace:
         X_LEFT_SCALE = 0.1
         X_RIGHT_SCALE = 0.9
 
-        elevation: [float] = [p.ele for p in points]
-        min_elev, max_elev = min(elevation), max(elevation)
+        min_elev, max_elev = min(self.elevation), max(self.elevation)
         elevation_norm_x = linspace(
-            X_LEFT_SCALE, X_RIGHT_SCALE, len(elevation)
+            X_LEFT_SCALE, X_RIGHT_SCALE, len(self.elevation)
         ).tolist()
         elevation_norm_y = [
             (elev - min_elev) / (max_elev - min_elev) * (Y_UPPER_SCALE - Y_BOTTOM_SCALE)
             + Y_BOTTOM_SCALE
-            for elev in elevation
+            for elev in self.elevation
         ]
 
         self.ax.plot(elevation_norm_x, elevation_norm_y, "b-")
