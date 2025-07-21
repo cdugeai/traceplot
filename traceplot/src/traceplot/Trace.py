@@ -46,10 +46,6 @@ class Trace:
         self.fig, self.ax = plt.subplots(figsize=FIGSIZE)
         self.fig.subplots_adjust(top=1, bottom=0, left=0, right=1, wspace=0)
 
-        print("fig", self.fig)
-
-        pass
-
     def _convertPointGeotoPx(self, points_geo):
         [minx, miny, maxx, maxy] = self.background_bbox
         return [pointGeoToPoint(p, minx, miny, maxx, maxy) for p in points_geo]
@@ -108,9 +104,15 @@ class Trace:
         height_pct: float,
         backgroundColor: str,
         backgroundColorAlpha: float,
+        ticks_space_meters: int = 200,
+        margin_top: float = 0.02,
+        margin_bottom: float = 0.02,
+        margin_left: float = 0.1,
+        margin_right: float = 0.05,
     ) -> None:
         PICTURE_HEIGHT = 1
         height_px = height_pct * PICTURE_HEIGHT
+
         # Add rectangle
         self.ax.add_patch(
             Rectangle(
@@ -121,80 +123,89 @@ class Trace:
                 alpha=backgroundColorAlpha,
             )
         )
+        ELE_GRAPH_MARGIN_TOP = margin_top
+        ELE_GRAPH_MARGIN_BOTTOM = margin_bottom
+        ELE_GRAPH_MARGIN_LEFT = margin_left
+        ELE_GRAPH_MARGIN_RIGHT = margin_right
 
-        Y_BOTTOM_SCALE = 0.02
-        Y_UPPER_SCALE = height_px - Y_BOTTOM_SCALE  # 0.08
-        X_LEFT_SCALE = 0.1
-        X_RIGHT_SCALE = 0.9
+        ELE_GRAPH_TOP = height_px - ELE_GRAPH_MARGIN_TOP
+        ELE_GRAPH_RIGHT = 1 - ELE_GRAPH_MARGIN_RIGHT
 
         min_elev, max_elev = min(self.elevation), max(self.elevation)
+
         elevation_norm_x = linspace(
-            X_LEFT_SCALE, X_RIGHT_SCALE, len(self.elevation)
+            ELE_GRAPH_MARGIN_LEFT, ELE_GRAPH_RIGHT, len(self.elevation)
         ).tolist()
         elevation_norm_y = [
-            (elev - min_elev) / (max_elev - min_elev) * (Y_UPPER_SCALE - Y_BOTTOM_SCALE)
-            + Y_BOTTOM_SCALE
+            (elev - min_elev)
+            / (max_elev - min_elev)
+            * (ELE_GRAPH_TOP - ELE_GRAPH_MARGIN_BOTTOM)
+            + ELE_GRAPH_MARGIN_BOTTOM
             for elev in self.elevation
         ]
 
         self.ax.plot(elevation_norm_x, elevation_norm_y, "b-")
 
-        elevation_legend_x = [X_LEFT_SCALE, X_LEFT_SCALE]
-        elevation_legend_y = [Y_BOTTOM_SCALE, Y_UPPER_SCALE]
+        elevation_legend_x = [ELE_GRAPH_MARGIN_LEFT, ELE_GRAPH_MARGIN_LEFT]
+        elevation_legend_y = [ELE_GRAPH_MARGIN_BOTTOM, ELE_GRAPH_TOP]
         self.ax.plot(
             elevation_legend_x, elevation_legend_y, color="grey", linestyle="-"
         )
 
-        ## Ticks
+        ## SCALE: Ticks
+        TICKS_LENGTH = 0.005
+        TICKS_COLOR = "grey"
 
-        TICK_SPACE_METERS = 200
-
-        k = -TICK_SPACE_METERS
+        k = -ticks_space_meters
         list_scale_ticks = [min_elev]
         while k < min_elev:
-            k += TICK_SPACE_METERS
+            k += ticks_space_meters
         while k <= max_elev:
             list_scale_ticks.append(k)
-            k += TICK_SPACE_METERS
+            k += ticks_space_meters
         list_scale_ticks.append(max_elev)
 
-        X_SCALE_TICKS = 0.005
         list_y_ticks = list(
             map(
-                lambda x: Y_BOTTOM_SCALE
+                lambda x: ELE_GRAPH_MARGIN_BOTTOM
                 + (x - min_elev)
                 / (max_elev - min_elev)
-                * (Y_UPPER_SCALE - Y_BOTTOM_SCALE),
+                * (ELE_GRAPH_TOP - ELE_GRAPH_MARGIN_BOTTOM),
                 list_scale_ticks,
             )
         )
         for y_tick in list_y_ticks:
-            x = [X_LEFT_SCALE - X_SCALE_TICKS, X_LEFT_SCALE]
-            y = [y_tick, y_tick]
-            self.ax.plot(x, y, color="grey", linestyle="-")
+            self.ax.plot(
+                [ELE_GRAPH_MARGIN_LEFT - TICKS_LENGTH, ELE_GRAPH_MARGIN_LEFT],
+                [y_tick, y_tick],
+                color=TICKS_COLOR,
+                linestyle="-",
+            )
 
-        # Min max scale
-        X_SCALE_LEGEND_OFFSET = 0.01
-        FONTSIZE_SCALE = 10
+        # SCALE: legend min/max ticks
+        SCALE_LEGEND_OFFSET_X = -0.01
+        SCALE_LEGEND_FONTSIZE = 10
+        SCALE_LEGEND_COLOR = "grey"
+
         self.ax.text(
-            X_LEFT_SCALE - X_SCALE_LEGEND_OFFSET,
-            Y_UPPER_SCALE,
+            ELE_GRAPH_MARGIN_LEFT + SCALE_LEGEND_OFFSET_X,
+            ELE_GRAPH_TOP,
             f"{round(max_elev)}m",
             verticalalignment="center",
             horizontalalignment="right",
             transform=self.ax.transAxes,
-            fontsize=FONTSIZE_SCALE,
-            color="grey",
+            fontsize=SCALE_LEGEND_FONTSIZE,
+            color=SCALE_LEGEND_COLOR,
         )
         self.ax.text(
-            X_LEFT_SCALE - X_SCALE_LEGEND_OFFSET,
-            Y_BOTTOM_SCALE,
+            ELE_GRAPH_MARGIN_LEFT + SCALE_LEGEND_OFFSET_X,
+            ELE_GRAPH_MARGIN_BOTTOM,
             f"{round(min_elev)}m",
             verticalalignment="center",
             horizontalalignment="right",
             transform=self.ax.transAxes,
-            fontsize=FONTSIZE_SCALE,
-            color="grey",
+            fontsize=SCALE_LEGEND_FONTSIZE,
+            color=SCALE_LEGEND_COLOR,
         )
 
     def build(self):
