@@ -1,18 +1,18 @@
-from traceplot.helpers import greet
-from traceplot.helpers.gmaps import generate_map_png, degree_to_meter_at_lat
+import os
+import gpxpy
+import traceplot.helpers.gmaps as gmaps
 from traceplot.Trace import Trace
 from traceplot.types import PointGeo
 from dotenv import load_dotenv
-from traceplot.helpers.geo import getBoundingBox, getCenterOfBoundingBox, getDistanceDeg
-from traceplot.helpers.gmaps import downloadEnclosingMap
-import gpxpy
-from traceplot.types import PointGeo
 
-import os
 
 load_dotenv()  # take environment variables
 
+
 def loadGpxToPointGeo(file_path: str) -> [PointGeo]:
+    """
+    Load a gpx file as a list of PointGeo
+    """
     points = list()
     gpx_file = open(file_path, "r")
     gpx = gpxpy.parse(gpx_file)
@@ -29,6 +29,7 @@ def loadGpxToPointGeo(file_path: str) -> [PointGeo]:
 
     return points
 
+
 # 1. Open GPX
 gpx_path = "sample.gpx"
 
@@ -44,7 +45,7 @@ points_geo_old: [PointGeo] = [
 FIG_PATH = "out/background_paris.png"
 api_key = os.environ.get("GMAPS_API_KEY")
 
-bbox_png = downloadEnclosingMap(
+bbox_png = gmaps.downloadEnclosingMap(
     points_geo=points_geo,
     out_filename=FIG_PATH,
     gmaps_api_key=api_key,
