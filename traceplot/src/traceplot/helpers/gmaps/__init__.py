@@ -78,7 +78,8 @@ def create_satellite_figure(
         ]
     )
 
-    if requests.get(url).status_code == 200:
+    response = requests.get(url)
+    if response.status_code == 200:
         with open(figure_path, "wb") as f:
             f.write(response.content)
             print(
