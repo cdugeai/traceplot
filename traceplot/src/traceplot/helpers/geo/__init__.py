@@ -1,4 +1,4 @@
-from traceplot.types import Point, Segment
+from traceplot.types import Point, PointGeo, Segment
 
 
 def getSquareDistance(p1: Point, p2: Point) -> float:
@@ -117,3 +117,8 @@ def simplify(points, tolerance=0.1, highestQuality=True):
     points = _simplifyDouglasPeucker(points, sqtolerance)
 
     return points
+
+
+# TODO test this
+def pointGeoToPoint(p_geo: PointGeo, minx, miny, maxx, maxy) -> Point:
+    return (p_geo.lng - minx) / (maxx - minx), (p_geo.lat - miny) / (maxy - miny)

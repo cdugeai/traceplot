@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 from PIL import Image
-from shapely.geometry import box, Point, Polygon, MultiPolygon
 from pyproj import Geod
 from matplotlib.patches import Rectangle
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
@@ -144,6 +143,7 @@ def figure_map(
         ),
     )
 
+    # TRASH
     for i in range(len(points) - 1):
         x_values = [points[i][0], points[i + 1][0]]
         y_values = [points[i][1], points[i + 1][1]]
