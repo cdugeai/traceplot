@@ -1,3 +1,5 @@
+run:
+	uv run python3 main.py
 test:
 	uv run coverage run -m pytest
 lint:
