@@ -4,7 +4,8 @@ import pytest
 
 
 def test_greeting() -> None:
-	assert greet.greetme() == "greeted"
+    assert greet.greetme() == "greeted"
+
 
 def test_hello() -> None:
-	assert hello() == "Hello from traceplot!"
+    assert hello() == "Hello from traceplot!"

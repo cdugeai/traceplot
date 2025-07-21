@@ -1,0 +1,3 @@
+Point = tuple[float, float]
+## todo fix
+Segment = tuple[float, float]
