@@ -7,7 +7,9 @@ authors = [
     { name = "Colin Dugeai", email = "colin.dugeai@gmail.com" }
 ]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "ruff>=0.12.4",
+]
 
 [build-system]
 requires = ["hatchling"]
