@@ -3,13 +3,31 @@ from traceplot.helpers.gmaps import generate_map_png, degree_to_meter_at_lat
 from traceplot.Trace import Trace
 from traceplot.types import PointGeo
 from dotenv import load_dotenv
-from traceplot.helpers.gpx import loadGpxToPointGeo
 from traceplot.helpers.geo import getBoundingBox, getCenterOfBoundingBox, getDistanceDeg
 from traceplot.helpers.gmaps import downloadEnclosingMap
+import gpxpy
+from traceplot.types import PointGeo
 
 import os
 
 load_dotenv()  # take environment variables
+
+def loadGpxToPointGeo(file_path: str) -> [PointGeo]:
+    points = list()
+    gpx_file = open(file_path, "r")
+    gpx = gpxpy.parse(gpx_file)
+    for track in gpx.tracks:
+        for segment in track.segments:
+            for point in segment.points:
+                points.append(
+                    PointGeo(
+                        lng=point.longitude,
+                        lat=point.latitude,
+                        elevation=point.elevation,
+                    )
+                )
+
+    return points
 
 # 1. Open GPX
 gpx_path = "sample.gpx"
