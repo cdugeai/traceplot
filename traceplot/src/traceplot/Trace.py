@@ -206,6 +206,17 @@ class Trace:
 
         pass
 
+    def addTitle(self, title: str, center_x: float, center_y: float, fontsize: int):
+        self.ax.text(
+            center_x,
+            center_y,
+            title,
+            verticalalignment="center",
+            horizontalalignment="center",
+            transform=self.ax.transAxes,
+            fontsize=fontsize,
+        )
+
     def plotPoints(self):
         self.ax.plot([p[0] for p in self.points_px], [p[1] for p in self.points_px])
 
