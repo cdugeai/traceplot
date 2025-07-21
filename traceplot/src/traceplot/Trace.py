@@ -4,6 +4,7 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from PIL import Image
 from src.traceplot.helpers.geo import pointGeoToPoint
 from matplotlib.patches import Rectangle
+from numpy import linspace
 
 
 def figure_map(
@@ -66,7 +67,6 @@ class Trace:
     ) -> None:
         minx, miny, maxx, maxy = self.background_bbox
         point_xy = pointGeoToPoint(point, minx, miny, maxx, maxy)
-        print('point_xy',point_xy)
         imagebox_marker = OffsetImage(Image.open(img_path), zoom=marker_scale)
         # add marker
         self.ax.add_artist(
@@ -102,18 +102,99 @@ class Trace:
         self.ax.axis("off")
 
     def addElevationGraph(
-        self, height_pct: float, backgroundColor: str, backgroundColorAlpha: float
+        self,
+        points: [PointGeo],
+        height_pct: float,
+        backgroundColor: str,
+        backgroundColorAlpha: float,
     ) -> None:
         PICTURE_HEIGHT = 1
-
+        height_px = height_pct * PICTURE_HEIGHT
+        # Add rectangle
         self.ax.add_patch(
             Rectangle(
                 xy=(0, 0),
                 width=1,
-                height=height_pct * PICTURE_HEIGHT,
+                height=height_px,
                 facecolor=backgroundColor,
                 alpha=backgroundColorAlpha,
             )
+        )
+
+        Y_BOTTOM_SCALE = 0.02
+        Y_UPPER_SCALE = height_px - Y_BOTTOM_SCALE  # 0.08
+        X_LEFT_SCALE = 0.1
+        X_RIGHT_SCALE = 0.9
+
+        elevation: [float] = [p.ele for p in points]
+        min_elev, max_elev = min(elevation), max(elevation)
+        elevation_norm_x = linspace(
+            X_LEFT_SCALE, X_RIGHT_SCALE, len(elevation)
+        ).tolist()
+        elevation_norm_y = [
+            (elev - min_elev) / (max_elev - min_elev) * (Y_UPPER_SCALE - Y_BOTTOM_SCALE)
+            + Y_BOTTOM_SCALE
+            for elev in elevation
+        ]
+
+        self.ax.plot(elevation_norm_x, elevation_norm_y, "b-")
+
+        elevation_legend_x = [X_LEFT_SCALE, X_LEFT_SCALE]
+        elevation_legend_y = [Y_BOTTOM_SCALE, Y_UPPER_SCALE]
+        self.ax.plot(
+            elevation_legend_x, elevation_legend_y, color="grey", linestyle="-"
+        )
+
+        ## Ticks
+
+        TICK_SPACE_METERS = 200
+
+        k = -TICK_SPACE_METERS
+        list_scale_ticks = [min_elev]
+        while k < min_elev:
+            k += TICK_SPACE_METERS
+        while k <= max_elev:
+            list_scale_ticks.append(k)
+            k += TICK_SPACE_METERS
+        list_scale_ticks.append(max_elev)
+
+        X_SCALE_TICKS = 0.005
+        list_y_ticks = list(
+            map(
+                lambda x: Y_BOTTOM_SCALE
+                + (x - min_elev)
+                / (max_elev - min_elev)
+                * (Y_UPPER_SCALE - Y_BOTTOM_SCALE),
+                list_scale_ticks,
+            )
+        )
+        for y_tick in list_y_ticks:
+            x = [X_LEFT_SCALE - X_SCALE_TICKS, X_LEFT_SCALE]
+            y = [y_tick, y_tick]
+            self.ax.plot(x, y, color="grey", linestyle="-")
+
+        # Min max scale
+        X_SCALE_LEGEND_OFFSET = 0.01
+        FONTSIZE_SCALE = 10
+        self.ax.text(
+            X_LEFT_SCALE - X_SCALE_LEGEND_OFFSET,
+            Y_UPPER_SCALE,
+            f"{round(max_elev)}m",
+            verticalalignment="center",
+            horizontalalignment="right",
+            transform=self.ax.transAxes,
+            fontsize=FONTSIZE_SCALE,
+            color="grey",
+        )
+        self.ax.text(
+            X_LEFT_SCALE - X_SCALE_LEGEND_OFFSET,
+            Y_BOTTOM_SCALE,
+            f"{round(min_elev)}m",
+            verticalalignment="center",
+            horizontalalignment="right",
+            transform=self.ax.transAxes,
+            fontsize=FONTSIZE_SCALE,
+            color="grey",
         )
 
     def build(self):
