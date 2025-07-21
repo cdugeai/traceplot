@@ -1,8 +1,8 @@
-from src.traceplot.types import BoundingBox, PointGeo, Point
+from traceplot.types import BoundingBox, PointGeo, Point
 import matplotlib.pyplot as plt
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from PIL import Image
-from src.traceplot.helpers.geo import pointGeoToPoint
+from traceplot.helpers.geo import pointGeoToPoint
 from matplotlib.patches import Rectangle
 from numpy import linspace
 
@@ -53,7 +53,7 @@ class Trace:
     def _convertPointGeotoPx(self, points_geo):
         [minx, miny, maxx, maxy] = self.background_bbox
         return [pointGeoToPoint(p, minx, miny, maxx, maxy) for p in points_geo]
-    
+
     def _extractElevation(self, points_geo):
         return [p.ele for p in points_geo]
 
