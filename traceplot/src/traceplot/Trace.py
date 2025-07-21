@@ -220,5 +220,15 @@ class Trace:
     def plotPoints(self):
         self.ax.plot([p[0] for p in self.points_px], [p[1] for p in self.points_px])
 
+    def save(self, outfile_img_path: str):
+        plt.savefig(
+            outfile_img_path,
+            dpi=600,
+            pad_inches=0.01,
+        )
+
+    def close(self):
+        plt.close()
+
     def show(self):
         plt.show()

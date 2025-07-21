@@ -1,5 +1,7 @@
 from traceplot.types import Point, PointGeo, Segment, BoundingBox
 import numpy as np
+from pyproj import Geod
+
 
 def getSquareDistance(p1: Point, p2: Point) -> float:
     """
@@ -123,16 +125,33 @@ def simplify(points, tolerance=0.1, highestQuality=True):
 def pointGeoToPoint(p_geo: PointGeo, minx, miny, maxx, maxy) -> Point:
     return (p_geo.lng - minx) / (maxx - minx), (p_geo.lat - miny) / (maxy - miny)
 
+
 # TODO test this
 def getBoundingBox(p_geo: [PointGeo]) -> BoundingBox:
     "return a bounding box which contains all waypoints"
     lat = [p.lat for p in p_geo]
     lon = [p.lng for p in p_geo]
-    return (min(lon),min(lat),max(lon),max(lat))
+    return (min(lon), min(lat), max(lon), max(lat))
+
 
 # TODO test this
 def getCenterOfBoundingBox(bbox: BoundingBox) -> PointGeo:
-    return PointGeo(lat=(bbox[1]+bbox[3])/2,lng=(bbox[0]+bbox[2])/2, elevation=0)
+    return PointGeo(
+        lat=(bbox[1] + bbox[3]) / 2, lng=(bbox[0] + bbox[2]) / 2, elevation=0
+    )
+
 
 def getDistanceDeg(p1: PointGeo, p2: PointGeo) -> float:
-    return np.linalg.norm(np.array([p1.lng,p1.lat])-np.array([p2.lng, p2.lat]))
+    return np.linalg.norm(np.array([p1.lng, p1.lat]) - np.array([p2.lng, p2.lat]))
+
+
+def degree_to_meter_at_lat(lat: float) -> float:
+    """
+    Converts one degree to meters for given latitude
+    """
+    geod = Geod(ellps="WGS84")
+    lon = 0
+    lat1 = lat - 0.5
+    lat2 = lat + 0.5
+    _, _, distance_m = geod.inv(lon, lat1, lon, lat2)
+    return distance_m

@@ -10,7 +10,7 @@ class PointGeo:
         self.lng = lng
         self.lat = lat
         self.ele = elevation
-    
+
     def __str__(self):
         return f"PointGeo (lng={self.lng},lat={self.lat},ele={self.ele})"
 

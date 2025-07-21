@@ -1,19 +1,47 @@
 from math import cos, radians, log2, sqrt
 import requests
 from pyproj import Geod
-from traceplot.types import ZoomLevel, BoundingBox
+from traceplot.types import ZoomLevel, BoundingBox, PointGeo
+from traceplot.helpers.geo import (
+    getCenterOfBoundingBox,
+    getDistanceDeg,
+    degree_to_meter_at_lat,
+)
+from traceplot.helpers.geo import getBoundingBox, getCenterOfBoundingBox, getDistanceDeg
 
 
-def degree_to_meter_at_lat(lat: float) -> float:
+def downloadEnclosingMap(
+    points_geo: [PointGeo],
+    out_filename: str,
+    gmaps_api_key: str,
+    maptype: str,
+    w_px: int = 640,
+    h_px: int = 640,
+) -> BoundingBox:
     """
-    Converts one degree to meters for given latitude
+    Download map background containing all points
     """
-    geod = Geod(ellps="WGS84")
-    lon = 0
-    lat1 = lat - 0.5
-    lat2 = lat + 0.5
-    _, _, distance_m = geod.inv(lon, lat1, lon, lat2)
-    return distance_m
+    gpx_bbox = getBoundingBox(points_geo)
+    gpx_bbox_center = getCenterOfBoundingBox(gpx_bbox)
+
+    radius_deg = getDistanceDeg(
+        PointGeo(lng=gpx_bbox[2], lat=gpx_bbox[3], elevation=0), gpx_bbox_center
+    )
+    radius_m = radius_deg * degree_to_meter_at_lat(gpx_bbox_center.lat)
+
+    # Generate background image
+    bbox_png = generate_map_png(
+        maptype=maptype,
+        lat=gpx_bbox_center.lat,
+        lon=gpx_bbox_center.lng,
+        width_px_sat=w_px,
+        height_px_sat=h_px,
+        radius_meters=radius_m,
+        figure_path=out_filename,
+        gmaps_api_key=gmaps_api_key,
+    )
+
+    return bbox_png
 
 
 def get_zoom_level_from_radius(
