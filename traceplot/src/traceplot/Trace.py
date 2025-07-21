@@ -34,12 +34,12 @@ class Trace:
 
     def __init__(
         self,
-        background_img_bbox: BoundingBox,
+        background_bbox: BoundingBox,
         points_geo: [PointGeo],
     ):
         FIGSIZE = (10, 10)
 
-        self.background_bbox = background_img_bbox
+        self.background_bbox = background_bbox
         self.points_px: [Point] = self._convertPointGeotoPx(points_geo)
         self.elevation: [float] = self._extractElevation(points_geo)
 

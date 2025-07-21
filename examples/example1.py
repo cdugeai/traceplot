@@ -45,7 +45,7 @@ points_geo_old: [PointGeo] = [
 FIG_PATH = "out/background_paris.png"
 api_key = os.environ.get("GMAPS_API_KEY")
 
-bbox_png = gmaps.downloadEnclosingMap(
+backgound_map_bbox = gmaps.downloadEnclosingMap(
     points_geo=points_geo,
     out_filename=FIG_PATH,
     gmaps_api_key=api_key,
@@ -57,11 +57,11 @@ bbox_png = gmaps.downloadEnclosingMap(
 
 # 3. Add trace, markers and text to image
 
-t: Trace = Trace(background_img_bbox=bbox_png, points_geo=points_geo)
+t: Trace = Trace(background_bbox=backgound_map_bbox, points_geo=points_geo)
 
-t.addBackgroundImage(FIG_PATH)
-t.addMarker(points_geo[0], "img/marker_start.png", "debut", 0.5, label_offset_x=0.05)
-t.addMarker(points_geo[-1], "img/marker_finish.png", "fin", 0.5, label_offset_x=0.05)
+t.addBackgroundImage(background_img_path=FIG_PATH)
+t.addMarker(points_geo[0], "img/marker_start.png", "debut", marker_scale=0.5, label_offset_x=0.05)
+t.addMarker(points_geo[-1], "img/marker_finish.png", "fin", marker_scale=0.5, label_offset_x=0.05)
 
 t.addElevationGraph(height_pct=0.17, backgroundColor="white", backgroundColorAlpha=0.6)
 t.plotPoints()
