@@ -1,10 +1,10 @@
-from traceplot.helpers.gmaps import get_google_maps_bbox
+from traceplot.helpers.gmaps import get_bbox
 
 import pytest
 
 
 def test_bbox_paris_z12() -> None:
-    assert get_google_maps_bbox(
+    assert get_bbox(
         center_lat=48.8589385,
         center_lon=2.2646338,
         zoom=12,

@@ -4,9 +4,9 @@ from pyproj import Geod
 from traceplot.types import ZoomLevel, BoundingBox
 
 
-def one_latitude_degree(lat: float) -> float:
+def degree_to_meter_at_lat(lat: float) -> float:
     """
-    Returns distance in meters
+    Converts one degree to meters for given latitude
     """
     geod = Geod(ellps="WGS84")
     lon = 0
@@ -22,12 +22,13 @@ def get_zoom_level_from_radius(
     meters_per_pixel_at_zoom_0 = 156543.03392
     target_meters_per_pixel = (2 * radius_meters * sqrt(2)) / width_px
     adjusted_mpp = target_meters_per_pixel / cos(radians(latitude))
-    zoom_level = log2(meters_per_pixel_at_zoom_0 / adjusted_mpp)
-    print(int(round(zoom_level)))
-    return int(round(zoom_level))
+    zoom_level_float = log2(meters_per_pixel_at_zoom_0 / adjusted_mpp)
+    zoom_level_int = int(round(zoom_level_float))
+
+    return zoom_level_int
 
 
-def get_google_maps_bbox(
+def get_bbox(
     center_lat: float, center_lon: float, zoom: ZoomLevel, width_px: int, height_px: int
 ) -> BoundingBox:
     scale = 156543.03392 * cos(radians(center_lat)) / (2**zoom)
@@ -37,7 +38,7 @@ def get_google_maps_bbox(
     image_height_m = height_px * scale
 
     # Conversion from meters in degrees
-    lat_deg_per_m = 1 / one_latitude_degree(center_lat)
+    lat_deg_per_m = 1 / degree_to_meter_at_lat(center_lat)
     lon_deg_per_m = 360 / (40075000 * cos(radians(center_lat)))
 
     delta_lat = (image_height_m * lat_deg_per_m) / 2
@@ -51,7 +52,8 @@ def get_google_maps_bbox(
     return minx, miny, maxx, maxy
 
 
-def create_satellite_figure(
+def generate_map_png(
+    maptype: str,
     lat: float,
     lon: float,
     width_px_sat: int,
@@ -60,19 +62,18 @@ def create_satellite_figure(
     figure_path: str,
     gmaps_api_key: str,
 ) -> BoundingBox:
-    zoom = get_zoom_level_from_radius(
-        lat, radius_meters, width_px_sat
-    )  ###### ADD POTENTIAL OFFSET
+    STATIC_MAPS_BASE_API = "https://maps.googleapis.com/maps/api/staticmap"
+
+    zoom = get_zoom_level_from_radius(lat, radius_meters, width_px_sat)
     size = str(width_px_sat) + "x" + str(height_px_sat)
 
-    # url = f"https://maps.googleapis.com/maps/api/staticmap?center={lat},{lon}&zoom={zoom}&size={size}&maptype=roadmap&scale=2&key={api_key}"
     url: str = "".join(
         [
-            "https://maps.googleapis.com/maps/api/staticmap",
+            STATIC_MAPS_BASE_API,
             f"?center={lat},{lon}",
             f"&zoom={zoom}",
             f"&size={size}",
-            f"&maptype=roadmap",
+            f"&maptype={maptype}",
             f"&scale=2",
             f"&key={gmaps_api_key}",
         ]
@@ -83,10 +84,9 @@ def create_satellite_figure(
         with open(figure_path, "wb") as f:
             f.write(response.content)
             print(
-                f"Satellite figure centered on {round(lat, 4)}, {round(lon, 4)} with a {radius_meters}m radius done"
+                f"PNG centered on {round(lat, 4)}, {round(lon, 4)} with a {radius_meters}m radius exported"
             )
-
     else:
         print("Erreur :", response.status_code)
 
-    return get_google_maps_bbox(lat, lon, zoom, width_px_sat, height_px_sat)
+    return get_bbox(lat, lon, zoom, width_px_sat, height_px_sat)
