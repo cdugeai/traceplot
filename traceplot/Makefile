@@ -1,0 +1,16 @@
+test:
+	uv run coverage run -m pytest
+lint:
+	uv run ruff check
+format:
+	uv run ruff format
+mypy:
+	uv run mypy --strict .
+check-all:
+	make format
+	make lint
+	make mypy
+coverage:
+	uv run coverage report
+	uv run coverage html
+	uv run open tests/coverage-report/index.html
