@@ -1,5 +1,5 @@
-from src.traceplot.helpers import greet
-from src.traceplot import hello
+from traceplot.helpers import greet
+from traceplot import hello
 import pytest
 
 
