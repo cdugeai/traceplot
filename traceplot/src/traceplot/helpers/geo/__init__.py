@@ -1,5 +1,5 @@
-from traceplot.types import Point, PointGeo, Segment
-
+from traceplot.types import Point, PointGeo, Segment, BoundingBox
+import numpy as np
 
 def getSquareDistance(p1: Point, p2: Point) -> float:
     """
@@ -122,3 +122,17 @@ def simplify(points, tolerance=0.1, highestQuality=True):
 # TODO test this
 def pointGeoToPoint(p_geo: PointGeo, minx, miny, maxx, maxy) -> Point:
     return (p_geo.lng - minx) / (maxx - minx), (p_geo.lat - miny) / (maxy - miny)
+
+# TODO test this
+def getBoundingBox(p_geo: [PointGeo]) -> BoundingBox:
+    "return a bounding box which contains all waypoints"
+    lat = [p.lat for p in p_geo]
+    lon = [p.lng for p in p_geo]
+    return (min(lon),min(lat),max(lon),max(lat))
+
+# TODO test this
+def getCenterOfBoundingBox(bbox: BoundingBox) -> PointGeo:
+    return PointGeo(lat=(bbox[1]+bbox[3])/2,lng=(bbox[0]+bbox[2])/2, elevation=0)
+
+def getDistanceDeg(p1: PointGeo, p2: PointGeo) -> float:
+    return np.linalg.norm(np.array([p1.lng,p1.lat])-np.array([p2.lng, p2.lat]))
