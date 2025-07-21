@@ -41,7 +41,7 @@ points_geo_old: [PointGeo] = [
 ]
 
 
-# 2. Generate backgound image
+# 2. Generate backgound image (eg. with Google Maps Static API)
 FIG_PATH = "out/background_paris.png"
 api_key = os.environ.get("GMAPS_API_KEY")
 
@@ -60,12 +60,24 @@ backgound_map_bbox = gmaps.downloadEnclosingMap(
 t: Trace = Trace(background_bbox=backgound_map_bbox, points_geo=points_geo)
 
 t.addBackgroundImage(background_img_path=FIG_PATH)
-t.addMarker(points_geo[0], "img/marker_start.png", "debut", marker_scale=0.5, label_offset_x=0.05)
-t.addMarker(points_geo[-1], "img/marker_finish.png", "fin", marker_scale=0.5, label_offset_x=0.05)
+t.addMarker(
+    points_geo[0],
+    img_path="img/marker_start.png",
+    label_text="debut",
+    marker_scale=0.5,
+    label_offset_x=0.05,
+)
+t.addMarker(
+    points_geo[-1],
+    img_path="img/marker_finish.png",
+    label_text="fin",
+    marker_scale=0.5,
+    label_offset_x=0.05,
+)
 
 t.addElevationGraph(height_pct=0.17, backgroundColor="white", backgroundColorAlpha=0.6)
 t.plotPoints()
-t.addTitle("Premier jour", 0.5, 0.2, 30)
+t.addTitle("Premier jour", center_x=0.5, center_y=0.2, fontsize=30)
 
 t.save("out/premier_jour.png")
 
