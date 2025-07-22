@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from PIL import Image
 from traceplot.helpers.geo import pointGeoToPoint
+from traceplot.helpers.graph import getTicksInt
 from matplotlib.patches import Rectangle
 from numpy import linspace
 
@@ -156,25 +157,17 @@ class Trace:
         TICKS_LENGTH = 0.005
         TICKS_COLOR = "grey"
 
-        k = -ticks_space_meters
-        list_scale_ticks = [min_elev]
-        while k < min_elev:
-            k += ticks_space_meters
-        while k <= max_elev:
-            list_scale_ticks.append(k)
-            k += ticks_space_meters
-        list_scale_ticks.append(max_elev)
-
-        list_y_ticks = list(
+        scale_ticks_meters = getTicksInt(min_elev, max_elev, ticks_space_meters, include_min_max=True)
+        scale_ticks_y = list(
             map(
                 lambda x: ELE_GRAPH_MARGIN_BOTTOM
                 + (x - min_elev)
                 / (max_elev - min_elev)
                 * (ELE_GRAPH_TOP - ELE_GRAPH_MARGIN_BOTTOM),
-                list_scale_ticks,
+                scale_ticks_meters,
             )
         )
-        for y_tick in list_y_ticks:
+        for y_tick in scale_ticks_y:
             self.ax.plot(
                 [ELE_GRAPH_MARGIN_LEFT - TICKS_LENGTH, ELE_GRAPH_MARGIN_LEFT],
                 [y_tick, y_tick],
