@@ -1,6 +1,5 @@
 from traceplot.helpers.geo import getSquareDistance, getSquareSegmentDistance
 from traceplot.types import Point, Segment
-import pytest
 
 
 def test_d0() -> None:

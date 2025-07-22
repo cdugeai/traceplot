@@ -1,7 +1,5 @@
 from traceplot.helpers.gmaps import get_bbox
 
-import pytest
-
 
 def test_bbox_paris_z12() -> None:
     assert get_bbox(

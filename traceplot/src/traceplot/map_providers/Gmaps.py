@@ -57,7 +57,7 @@ class Gmaps(MapProvider):
                 f"&zoom={zoom}",
                 f"&size={size}",
                 f"&maptype={self.providerConfig.get('maptype')}",
-                f"&scale=2",
+                "&scale=2",
                 f"&key={self.providerConfig.get('gmaps_api_key')}",
             ]
         )

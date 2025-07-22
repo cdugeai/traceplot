@@ -1,13 +1,6 @@
 from math import cos, radians, log2, sqrt
-import requests
-from pyproj import Geod
-from traceplot.types import ZoomLevel, BoundingBox, PointGeo
-from traceplot.helpers.geo import (
-    getCenterOfBoundingBox,
-    getDistanceDeg,
-    degree_to_meter_at_lat,
-)
-from traceplot.helpers.geo import getBoundingBox, getCenterOfBoundingBox, getDistanceDeg
+from traceplot.types import ZoomLevel, BoundingBox
+from traceplot.helpers.geo import degree_to_meter_at_lat
 
 
 def get_zoom_level_from_radius(

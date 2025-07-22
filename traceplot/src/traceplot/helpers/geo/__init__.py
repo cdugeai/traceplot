@@ -158,4 +158,4 @@ def degree_to_meter_at_lat(lat: float) -> float:
     lat1 = lat - 0.5
     lat2 = lat + 0.5
     _, _, distance_m = geod.inv(lon, lat1, lon, lat2)
-    return distance_m
+    return float(distance_m)
