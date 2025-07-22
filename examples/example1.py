@@ -2,9 +2,10 @@ import os
 import gpxpy
 import traceplot.helpers.gmaps as gmaps
 from traceplot.Trace import Trace
-from traceplot.types import PointGeo
+from traceplot.types import PointGeo, BoundingBox
 from dotenv import load_dotenv
-
+import traceplot.map_providers as map_providers
+from traceplot.map_providers import MapProvider
 
 load_dotenv()  # take environment variables
 
@@ -40,20 +41,19 @@ points_geo_old: [PointGeo] = [
     PointGeo(2.3850533122051463, 48.82797239213328, 60),
 ]
 
-
 # 2. Generate backgound image (eg. with Google Maps Static API)
 FIG_PATH = "out/background_paris.png"
 api_key = os.environ.get("GMAPS_API_KEY")
 
-backgound_map_bbox = gmaps.downloadEnclosingMap(
-    points_geo=points_geo,
-    out_filename=FIG_PATH,
-    gmaps_api_key=api_key,
-    maptype="roadmap",
-    w_px=640,
-    h_px=640,
+gmaps_provider: MapProvider = map_providers.Gmaps(
+    {
+        "maptype": "roadmap",
+        "gmaps_api_key": api_key,
+    }
 )
-
+backgound_map_bbox: BoundingBox = gmaps_provider.downloadEnclosingMap(
+    points_geo=points_geo, out_filename=FIG_PATH, w_px=640, h_px=640
+)
 
 # 3. Add trace, markers and text to image
 

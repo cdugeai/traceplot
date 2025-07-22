@@ -10,40 +10,6 @@ from traceplot.helpers.geo import (
 from traceplot.helpers.geo import getBoundingBox, getCenterOfBoundingBox, getDistanceDeg
 
 
-def downloadEnclosingMap(
-    points_geo: [PointGeo],
-    out_filename: str,
-    gmaps_api_key: str,
-    maptype: str,
-    w_px: int = 640,
-    h_px: int = 640,
-) -> BoundingBox:
-    """
-    Download map background containing all points
-    """
-    gpx_bbox = getBoundingBox(points_geo)
-    gpx_bbox_center = getCenterOfBoundingBox(gpx_bbox)
-
-    radius_deg = getDistanceDeg(
-        PointGeo(lng=gpx_bbox[2], lat=gpx_bbox[3], elevation=0), gpx_bbox_center
-    )
-    radius_m = radius_deg * degree_to_meter_at_lat(gpx_bbox_center.lat)
-
-    # Generate background image
-    bbox_png = generate_map_png(
-        maptype=maptype,
-        lat=gpx_bbox_center.lat,
-        lon=gpx_bbox_center.lng,
-        width_px_sat=w_px,
-        height_px_sat=h_px,
-        radius_meters=radius_m,
-        figure_path=out_filename,
-        gmaps_api_key=gmaps_api_key,
-    )
-
-    return bbox_png
-
-
 def get_zoom_level_from_radius(
     latitude: float, radius_meters: float, width_px: int
 ) -> ZoomLevel:
@@ -78,43 +44,3 @@ def get_bbox(
     maxy = center_lat + delta_lat
 
     return minx, miny, maxx, maxy
-
-
-def generate_map_png(
-    maptype: str,
-    lat: float,
-    lon: float,
-    width_px_sat: int,
-    height_px_sat: int,
-    radius_meters: float,
-    figure_path: str,
-    gmaps_api_key: str,
-) -> BoundingBox:
-    STATIC_MAPS_BASE_API = "https://maps.googleapis.com/maps/api/staticmap"
-
-    zoom = get_zoom_level_from_radius(lat, radius_meters, width_px_sat)
-    size = str(width_px_sat) + "x" + str(height_px_sat)
-
-    url: str = "".join(
-        [
-            STATIC_MAPS_BASE_API,
-            f"?center={lat},{lon}",
-            f"&zoom={zoom}",
-            f"&size={size}",
-            f"&maptype={maptype}",
-            f"&scale=2",
-            f"&key={gmaps_api_key}",
-        ]
-    )
-
-    response = requests.get(url)
-    if response.status_code == 200:
-        with open(figure_path, "wb") as f:
-            f.write(response.content)
-            print(
-                f"PNG centered on {round(lat, 4)}, {round(lon, 4)} with a {radius_meters}m radius exported"
-            )
-    else:
-        print("Erreur :", response.status_code)
-
-    return get_bbox(lat, lon, zoom, width_px_sat, height_px_sat)

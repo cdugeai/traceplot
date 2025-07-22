@@ -157,7 +157,9 @@ class Trace:
         TICKS_LENGTH = 0.005
         TICKS_COLOR = "grey"
 
-        scale_ticks_meters = getTicksInt(min_elev, max_elev, ticks_space_meters, include_min_max=True)
+        scale_ticks_meters = getTicksInt(
+            min_elev, max_elev, ticks_space_meters, include_min_max=True
+        )
         scale_ticks_y = list(
             map(
                 lambda x: ELE_GRAPH_MARGIN_BOTTOM
