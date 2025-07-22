@@ -1,5 +1,7 @@
 from traceplot.types import BoundingBox, PointGeo, Point
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
+from matplotlib.axes import Axes
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from PIL import Image
 from traceplot.helpers.geo import pointGeoToPoint
@@ -8,50 +10,32 @@ from matplotlib.patches import Rectangle
 from numpy import linspace
 
 
-def figure_map(
-    points,
-    bbox_satellite,
-    satellite_img_path,
-    outfile_img_path,
-    name,
-    start,
-    finish,
-    img_start_marker_path,
-    img_finish_marker_path,
-    offset_start_x=0,
-    offset_start_y=0,
-    offset_finish_x=0,
-    offset_finish_y=0,
-):
-    pass
-
-
 class Trace:
     background_bbox: BoundingBox
-    fig: plt.Figure
-    ax: plt.Axes
-    points_px: [Point]
-    elevation: [float]
+    fig: Figure
+    ax: Axes
+    points_px: list[Point]
+    elevation: list[float]
 
     def __init__(
         self,
         background_bbox: BoundingBox,
-        points_geo: [PointGeo],
+        points_geo: list[PointGeo],
     ):
         FIGSIZE = (10, 10)
 
         self.background_bbox = background_bbox
-        self.points_px: [Point] = self._convertPointGeotoPx(points_geo)
-        self.elevation: [float] = self._extractElevation(points_geo)
+        self.points_px: list[Point] = self._convertPointGeotoPx(points_geo)
+        self.elevation: list[float] = self._extractElevation(points_geo)
 
         self.fig, self.ax = plt.subplots(figsize=FIGSIZE)
         self.fig.subplots_adjust(top=1, bottom=0, left=0, right=1, wspace=0)
 
-    def _convertPointGeotoPx(self, points_geo):
+    def _convertPointGeotoPx(self, points_geo: list[PointGeo]) -> list[Point]:
         [minx, miny, maxx, maxy] = self.background_bbox
         return [pointGeoToPoint(p, minx, miny, maxx, maxy) for p in points_geo]
 
-    def _extractElevation(self, points_geo):
+    def _extractElevation(self, points_geo: list[PointGeo]) -> list[float]:
         return [p.ele for p in points_geo]
 
     def addMarker(
@@ -60,7 +44,7 @@ class Trace:
         img_path: str,
         label_text: str,
         marker_scale: float = 1.0,
-        label_fontsize=20,
+        label_fontsize: int = 20,
         label_offset_x: float = 0,
         label_offset_y: float = 0,
     ) -> None:
@@ -91,7 +75,7 @@ class Trace:
         )
         pass
 
-    def addBackgroundImage(self, background_img_path: str):
+    def addBackgroundImage(self, background_img_path: str) -> None:
         # Load backgroud image
         self.ax.imshow(Image.open(background_img_path), extent=(0, 1, 0, 1))
 
@@ -203,16 +187,9 @@ class Trace:
             color=SCALE_LEGEND_COLOR,
         )
 
-    def build(self):
-        self.addElevationGraph("red", 0.2)
-        # Add start marker
-        self.addMarker()
-        # Add finish merker
-        self.addMarker()
-
-        pass
-
-    def addTitle(self, title: str, center_x: float, center_y: float, fontsize: int):
+    def addTitle(
+        self, title: str, center_x: float, center_y: float, fontsize: int
+    ) -> None:
         self.ax.text(
             center_x,
             center_y,
@@ -223,18 +200,18 @@ class Trace:
             fontsize=fontsize,
         )
 
-    def plotPoints(self):
+    def plotPoints(self) -> None:
         self.ax.plot([p[0] for p in self.points_px], [p[1] for p in self.points_px])
 
-    def save(self, outfile_img_path: str):
+    def save(self, outfile_img_path: str) -> None:
         plt.savefig(
             outfile_img_path,
             dpi=600,
             pad_inches=0.01,
         )
 
-    def close(self):
+    def close(self) -> None:
         plt.close()
 
-    def show(self):
+    def show(self) -> None:
         plt.show()

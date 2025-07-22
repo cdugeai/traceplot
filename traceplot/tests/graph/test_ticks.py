@@ -1,11 +1,11 @@
 from traceplot.helpers.graph import getTicks, getTicksInt
 
 
-def test_ticks_empty():
+def test_ticks_empty() -> None:
     assert getTicks(10, 50, ticks_space=200, include_min_max=True) == [10, 50]
 
 
-def test_ticks_not_empty():
+def test_ticks_not_empty() -> None:
     assert getTicks(10, 50, ticks_space=10, include_min_max=True) == [
         10,
         20,
@@ -15,7 +15,7 @@ def test_ticks_not_empty():
     ]
 
 
-def test_ticks_complex():
+def test_ticks_complex() -> None:
     assert getTicks(12, 49, ticks_space=10, include_min_max=True) == [
         12,
         20,
@@ -25,7 +25,7 @@ def test_ticks_complex():
     ]
 
 
-def test_ticks_float():
+def test_ticks_float() -> None:
     assert getTicks(12.22, 49.98, ticks_space=10, include_min_max=True) == [
         12.22,
         20.0,
@@ -35,7 +35,7 @@ def test_ticks_float():
     ]
 
 
-def test_ticks_float_to_round():
+def test_ticks_float_to_round() -> None:
     assert getTicksInt(12.22, 49.98, ticks_space=10, include_min_max=True) == [
         12,
         20,
@@ -45,7 +45,7 @@ def test_ticks_float_to_round():
     ]
 
 
-def test_ticks_float_to_round_exclude_bounds():
+def test_ticks_float_to_round_exclude_bounds() -> None:
     assert getTicksInt(12.22, 49.98, ticks_space=10, include_min_max=False) == [
         20,
         30,

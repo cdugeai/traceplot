@@ -2,12 +2,15 @@ from typing import TypedDict
 import requests
 from traceplot.map_providers import MapProvider
 from traceplot.helpers.gmaps import (
-    getBoundingBox,
-    getCenterOfBoundingBox,
     get_zoom_level_from_radius,
     get_bbox,
 )
-from traceplot.helpers.geo import getDistanceDeg, degree_to_meter_at_lat
+from traceplot.helpers.geo import (
+    getDistanceDeg,
+    degree_to_meter_at_lat,
+    getCenterOfBoundingBox,
+    getBoundingBox,
+)
 from traceplot.types import PointGeo, BoundingBox
 
 
@@ -26,7 +29,7 @@ class Gmaps(MapProvider):
 
     def downloadEnclosingMap(
         self,
-        points_geo: [PointGeo],
+        points_geo: list[PointGeo],
         out_filename: str,
         w_px: int = 640,
         h_px: int = 640,

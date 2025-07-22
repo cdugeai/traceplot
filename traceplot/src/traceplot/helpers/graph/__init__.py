@@ -1,6 +1,6 @@
 def getTicks(
-    min_: float, max_: float, ticks_space: float, include_min_max=True
-) -> [float]:
+    min_: float, max_: float, ticks_space: float, include_min_max: bool = True
+) -> list[float]:
     """
     Get ticks from A to B
     """
@@ -18,6 +18,6 @@ def getTicks(
 
 
 def getTicksInt(
-    min_: float, max_: float, ticks_space: float, include_min_max=True
-) -> [float]:
+    min_: float, max_: float, ticks_space: float, include_min_max: bool = True
+) -> list[float]:
     return [round(x) for x in getTicks(min_, max_, ticks_space, include_min_max)]

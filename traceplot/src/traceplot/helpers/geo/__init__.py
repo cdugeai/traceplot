@@ -39,7 +39,7 @@ def getSquareSegmentDistance(p: Segment, p1: Point, p2: Point) -> float:
     return dx * dx + dy * dy
 
 
-def _simplifyRadialDistance(points, tolerance):
+def _simplifyRadialDistance(points: list[Point], tolerance: float) -> list[Point]:
     length = len(points)
     prev_point = points[0]
     new_points = [prev_point]
@@ -57,7 +57,7 @@ def _simplifyRadialDistance(points, tolerance):
     return new_points
 
 
-def _simplifyDouglasPeucker(points, tolerance):
+def _simplifyDouglasPeucker(points: list[Point], tolerance: float) -> list[Point]:
     length = len(points)
     markers = [0] * length  # Maybe not the most efficent way?
 
@@ -73,7 +73,7 @@ def _simplifyDouglasPeucker(points, tolerance):
     markers[last] = 1
 
     while last:
-        max_sqdist = 0
+        max_sqdist = 0.0
 
         for i in range(first, last):
             sqdist = getSquareSegmentDistance(points[i], points[first], points[last])
@@ -110,7 +110,9 @@ def _simplifyDouglasPeucker(points, tolerance):
     return new_points
 
 
-def simplify(points, tolerance=0.1, highestQuality=True):
+def simplify(
+    points: list[Point], tolerance: float = 0.1, highestQuality: bool = True
+) -> list[Point]:
     sqtolerance = tolerance * tolerance
 
     if not highestQuality:
@@ -122,12 +124,14 @@ def simplify(points, tolerance=0.1, highestQuality=True):
 
 
 # TODO test this
-def pointGeoToPoint(p_geo: PointGeo, minx, miny, maxx, maxy) -> Point:
+def pointGeoToPoint(
+    p_geo: PointGeo, minx: float, miny: float, maxx: float, maxy: float
+) -> Point:
     return (p_geo.lng - minx) / (maxx - minx), (p_geo.lat - miny) / (maxy - miny)
 
 
 # TODO test this
-def getBoundingBox(p_geo: [PointGeo]) -> BoundingBox:
+def getBoundingBox(p_geo: list[PointGeo]) -> BoundingBox:
     "return a bounding box which contains all waypoints"
     lat = [p.lat for p in p_geo]
     lon = [p.lng for p in p_geo]

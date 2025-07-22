@@ -14,7 +14,7 @@ class MapProvider(ABC):
     @abstractmethod
     def downloadEnclosingMap(
         self,
-        points_geo: [PointGeo],
+        points_geo: list[PointGeo],
         out_filename: str,
         w_px: int = 640,
         h_px: int = 640,
