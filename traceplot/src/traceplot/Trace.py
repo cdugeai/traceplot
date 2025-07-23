@@ -4,8 +4,9 @@ from matplotlib.figure import Figure
 from matplotlib.axes import Axes
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from PIL import Image
-from traceplot.helpers.geo import pointGeoToPoint
+from traceplot.helpers.geo import pointGeoToPoint, getBoundingBox
 from traceplot.helpers.graph import getTicksInt
+from traceplot.BackgroundImage import BackgroundImage
 from matplotlib.patches import Rectangle
 from numpy import linspace
 
@@ -15,18 +16,20 @@ class Trace:
     fig: Figure
     ax: Axes
     points_px: list[Point]
+    points_geo: list[PointGeo]
     elevation: list[float]
 
     def __init__(
         self,
-        background_bbox: BoundingBox,
         points_geo: list[PointGeo],
     ):
         FIGSIZE = (10, 10)
+        self.points_geo = points_geo
 
-        self.background_bbox = background_bbox
-        self.points_px: list[Point] = self._convertPointGeotoPx(points_geo)
-        self.elevation: list[float] = self._extractElevation(points_geo)
+        # TODO set bounding box enclosing points (+ margins)
+        self._setBoundingBoxBackground(getBoundingBox(points_geo))
+
+        self.elevation = self._extractElevation(points_geo)
 
         self.fig, self.ax = plt.subplots(figsize=FIGSIZE)
         self.fig.subplots_adjust(top=1, bottom=0, left=0, right=1, wspace=0)
@@ -75,14 +78,22 @@ class Trace:
         )
         pass
 
-    def addBackgroundImage(self, background_img_path: str) -> None:
+    def addBackgroundImage(self, background_img: BackgroundImage) -> None:
+        # Set bounding box
+        self._setBoundingBoxBackground(background_img.bbox)
+
         # Load backgroud image
-        self.ax.imshow(Image.open(background_img_path), extent=(0, 1, 0, 1))
+        self.ax.imshow(Image.open(background_img.image_path), extent=(0, 1, 0, 1))
 
         self.ax.set_xlim(0, 1)
         self.ax.set_ylim(0, 1)
         self.ax.set_aspect("equal")
         self.ax.axis("off")
+
+    def _setBoundingBoxBackground(self, bbox: BoundingBox) -> None:
+        self.background_bbox = bbox
+        # recompute point px positions
+        self.points_px: list[Point] = self._convertPointGeotoPx(self.points_geo)
 
     def addElevationGraph(
         self,

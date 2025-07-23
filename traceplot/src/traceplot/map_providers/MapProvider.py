@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from traceplot.types import PointGeo, BoundingBox
+from traceplot.types import PointGeo
+from traceplot.BackgroundImage import BackgroundImage
 
 
 class MapProvider(ABC):
@@ -18,5 +19,5 @@ class MapProvider(ABC):
         out_filename: str,
         w_px: int = 640,
         h_px: int = 640,
-    ) -> BoundingBox:
+    ) -> BackgroundImage:
         pass

@@ -1,6 +1,7 @@
 from typing import TypedDict
 import requests
 from traceplot.map_providers import MapProvider
+from traceplot.BackgroundImage import BackgroundImage
 from traceplot.helpers.gmaps import (
     get_zoom_level_from_radius,
     get_bbox,
@@ -11,7 +12,7 @@ from traceplot.helpers.geo import (
     getCenterOfBoundingBox,
     getBoundingBox,
 )
-from traceplot.types import PointGeo, BoundingBox
+from traceplot.types import PointGeo
 
 
 GmapsConfig = TypedDict(
@@ -33,7 +34,7 @@ class Gmaps(MapProvider):
         out_filename: str,
         w_px: int = 640,
         h_px: int = 640,
-    ) -> BoundingBox:
+    ) -> BackgroundImage:
         """
         Download map background containing all points
         """
@@ -72,4 +73,7 @@ class Gmaps(MapProvider):
         else:
             print("Erreur :", response.status_code, response.text)
 
-        return get_bbox(gpx_bbox_center.lat, gpx_bbox_center.lng, zoom, w_px, h_px)
+        return BackgroundImage(
+            bbox=get_bbox(gpx_bbox_center.lat, gpx_bbox_center.lng, zoom, w_px, h_px),
+            image_path=out_filename,
+        )
