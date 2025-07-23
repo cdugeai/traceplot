@@ -1,6 +1,6 @@
 [project]
 name = "traceplot"
-version = "1.0.0"
+version = "1.0.1"
 description = "Static map generator with points plots."
 readme = "README.md"
 authors = [
@@ -16,6 +16,10 @@ dependencies = [
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[project.urls]
+Homepage = "https://github.com/cdugeai/traceplot"
+Issues = "https://github.com/cdugeai/traceplot/issues"
 
 [dependency-groups]
 dev = [
