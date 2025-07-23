@@ -16,3 +16,7 @@ coverage:
 	uv run coverage report
 	uv run coverage html
 	uv run open tests/coverage-report/index.html
+publish-test:
+	uv build && uv publish --publish-url https://test.pypi.org/legacy/
+publish:
+	uv build && uv publish
