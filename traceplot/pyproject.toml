@@ -1,6 +1,6 @@
 [project]
 name = "traceplot"
-version = "0.1.0"
+version = "0.1.1"
 description = "Static map generator with points plots."
 readme = "README.md"
 authors = [
