@@ -1,11 +1,11 @@
-import os
-import gpxpy
-import traceplot.helpers.gmaps as gmaps
 from traceplot.Trace import Trace
 from traceplot.types import PointGeo, BoundingBox
+from traceplot.map_providers import MapProvider, Gmaps
+import traceplot.helpers.gmaps as gmaps
 from dotenv import load_dotenv
-import traceplot.map_providers as map_providers
-from traceplot.map_providers import MapProvider
+import os
+import gpxpy
+
 
 load_dotenv()  # take environment variables
 
@@ -45,7 +45,7 @@ points_geo_old: [PointGeo] = [
 FIG_PATH = "out/background_paris.png"
 api_key = os.environ.get("GMAPS_API_KEY")
 
-gmaps_provider: MapProvider = map_providers.Gmaps(
+gmaps_provider: MapProvider = Gmaps(
     {
         "maptype": "roadmap",
         "gmaps_api_key": api_key,
