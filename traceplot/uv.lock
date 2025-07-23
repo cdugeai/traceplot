@@ -576,7 +576,6 @@ dependencies = [
     { name = "matplotlib" },
     { name = "pyproj" },
     { name = "requests" },
-    { name = "ruff" },
 ]
 
 [package.dev-dependencies]
@@ -584,6 +583,7 @@ dev = [
     { name = "coverage" },
     { name = "mypy" },
     { name = "pytest" },
+    { name = "ruff" },
     { name = "types-requests" },
 ]
 
@@ -592,7 +592,6 @@ requires-dist = [
     { name = "matplotlib", specifier = ">=3.10.3" },
     { name = "pyproj", specifier = ">=3.7.1" },
     { name = "requests", specifier = ">=2.32.4" },
-    { name = "ruff", specifier = ">=0.12.4" },
 ]
 
 [package.metadata.requires-dev]
@@ -600,6 +599,7 @@ dev = [
     { name = "coverage", specifier = ">=7.9.2" },
     { name = "mypy", specifier = ">=1.17.0" },
     { name = "pytest", specifier = ">=8.4.1" },
+    { name = "ruff", specifier = ">=0.12.4" },
     { name = "types-requests", specifier = ">=2.32.4.20250611" },
 ]
 

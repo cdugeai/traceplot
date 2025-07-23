@@ -1,7 +1,7 @@
 [project]
 name = "traceplot"
 version = "0.1.0"
-description = "Add your description here"
+description = "Static map generator with points plots."
 readme = "README.md"
 authors = [
     { name = "Colin Dugeai", email = "colin.dugeai@gmail.com" }
@@ -11,7 +11,6 @@ dependencies = [
     "matplotlib>=3.10.3",
     "pyproj>=3.7.1",
     "requests>=2.32.4",
-    "ruff>=0.12.4",
 ]
 
 [build-system]
@@ -23,5 +22,6 @@ dev = [
     "coverage>=7.9.2",
     "mypy>=1.17.0",
     "pytest>=8.4.1",
+    "ruff>=0.12.4",
     "types-requests>=2.32.4.20250611",
 ]
