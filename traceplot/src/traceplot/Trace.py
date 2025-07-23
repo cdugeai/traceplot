@@ -4,7 +4,7 @@ from matplotlib.figure import Figure
 from matplotlib.axes import Axes
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from PIL import Image
-from traceplot.helpers.geo import pointGeoToPoint, getBoundingBox
+from traceplot.helpers.geo import pointGeoToPoint, getBoundingBox, addMarginToBbox
 from traceplot.helpers.graph import getTicksInt
 from traceplot.BackgroundImage import BackgroundImage
 from matplotlib.patches import Rectangle
@@ -94,6 +94,23 @@ class Trace:
         self.background_bbox = bbox
         # recompute point px positions
         self.points_px: list[Point] = self._convertPointGeotoPx(self.points_geo)
+
+    def resizeBbox(
+        self,
+        margin_top: float = 0,
+        margin_bottom: float = 0,
+        margin_left: float = 0,
+        margin_right: float = 0,
+    ) -> None:
+        self._setBoundingBoxBackground(
+            addMarginToBbox(
+                self.background_bbox,
+                margin_top,
+                margin_bottom,
+                margin_left,
+                margin_right,
+            )
+        )
 
     def addElevationGraph(
         self,

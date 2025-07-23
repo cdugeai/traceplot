@@ -1,12 +1,11 @@
-from traceplot.Trace import Trace
-from traceplot.BackgroundImage import BackgroundImage
 from traceplot.types import PointGeo, BoundingBox
+from traceplot.BackgroundImage import BackgroundImage
+from traceplot.Trace import Trace
+from dotenv import load_dotenv
 import traceplot.map_providers as map_providers
 import traceplot.helpers.gmaps as gmaps
-from dotenv import load_dotenv
-import os
 import gpxpy
-
+import os
 
 load_dotenv()
 
@@ -32,11 +31,11 @@ def loadGpxToPointGeo(file_path: str) -> [PointGeo]:
     return points
 
 
-# 1. Get a list of PointGeo (eg. open GPX, or manual input)
-
+# 1. Get a list of PointGeo
+# 1.1 ... from GPX file
 gpx_path = "sample.gpx"
 points_geo: list[PointGeo] = loadGpxToPointGeo(gpx_path)
-
+# 1.2 ... from manual input
 points_geo_manual: list[PointGeo] = [
     PointGeo(2.282259089265323, 48.88677456721743, 50),
     PointGeo(2.2746338, 48.8589385, 52),
@@ -46,8 +45,8 @@ points_geo_manual: list[PointGeo] = [
 # 2. Setup a Trace
 t: Trace = Trace(points_geo=points_geo)
 
-# 3. Load background image (eg. with Google Maps Static API, or local png file)
-
+# 3. Load background image
+# 3.1 ... Download map using a map provider (eg. with Google Maps Static API)
 generated_map: BackgroundImage = map_providers.Gmaps(
     {
         "maptype": "roadmap",
@@ -56,16 +55,22 @@ generated_map: BackgroundImage = map_providers.Gmaps(
 ).downloadEnclosingMap(
     points_geo=points_geo, out_filename="out/background_paris.png", w_px=640, h_px=640
 )
-
+# 3.2 ... or load image from file
 local_map: BackgroundImage = BackgroundImage(
-    bbox=(1.0, 2.0, 3.0, 4.0), image_path="path/to/image.png"
+    bbox=(2.117, 48.704, 2.557, 48.994), image_path="out/background_paris.png"
 )
 
-
 # 4. Add elements to trace  trace, markers and text to image
+# 4.1 Add background image to Trace
+ADD_BACKGROUND_IMAGE = True
 
-# 4.1 Add background image
-t.addBackgroundImage(background_img=generated_map)
+if ADD_BACKGROUND_IMAGE:
+    t.addBackgroundImage(background_img=generated_map)
+    # OR t.addBackgroundImage(background_img=local_map)
+else:
+    # If needed, resize bounding box when no background image added
+    t.resizeBbox(margin_bottom=0.5, margin_left=0.1, margin_right=0.1, margin_top=0.0)
+
 # 4.2 Add start/end markers
 t.addMarker(
     points_geo[0],
@@ -88,7 +93,7 @@ t.plotPoints()
 # 4.5 Add title
 t.addTitle("Premier jour", center_x=0.5, center_y=0.2, fontsize=30)
 # 4.6 Save map to file
-t.save("out/premier_jour.png")
+t.save("out/day_one.png")
 # 4.7 Display map
 t.show()
 # 4.8 Close Trace

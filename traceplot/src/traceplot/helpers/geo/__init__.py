@@ -138,6 +138,28 @@ def getBoundingBox(p_geo: list[PointGeo]) -> BoundingBox:
     return (min(lon), min(lat), max(lon), max(lat))
 
 
+def addMarginToBbox(
+    bbox: BoundingBox,
+    margin_top_pct: float = 0,
+    margin_bottom_pct: float = 0,
+    margin_left_pct: float = 0,
+    margin_right_pct: float = 0,
+) -> BoundingBox:
+    """
+    Add margins to bounding box
+    """
+    bbox_lon = bbox[2] - bbox[0]
+    bbox_lat = bbox[3] - bbox[1]
+
+    return (
+        bbox[0] - bbox_lon * margin_left,
+        bbox[1] - bbox_lat * margin_bottom,
+        bbox[2] + bbox_lon * margin_right,
+        # TODO fix margin_top not working
+        bbox[3] + bbox_lat * margin_top,
+    )
+
+
 # TODO test this
 def getCenterOfBoundingBox(bbox: BoundingBox) -> PointGeo:
     return PointGeo(
