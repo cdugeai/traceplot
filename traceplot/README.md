@@ -4,7 +4,7 @@ _Traceplot_ is a library to generate static maps and plot points on it. You can 
 
 Here is a result you can get:
 
-[](https://raw.githubusercontent.com/cdugeai/traceplot/main/images/premier_jour.png)
+![](https://raw.githubusercontent.com/cdugeai/traceplot/main/images/premier_jour.png)
 
 ## Installation
 
