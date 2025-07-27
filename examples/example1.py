@@ -6,6 +6,7 @@ import traceplot.map_providers as map_providers
 import traceplot.helpers.gmaps as gmaps
 import gpxpy
 import os
+import json
 
 load_dotenv()
 
@@ -102,6 +103,22 @@ t.addMarker(
     fontstyle="italic",
     fontweight="book",
 )
+
+
+with open("idf.geojson", "r") as f:
+    idf = json.load(f)
+
+for dept in idf.get("features"):
+    points_json = dept.get("geometry").get("coordinates")[0]
+    points_geo_polygon = [PointGeo(p[0], p[1], 0) for p in points_json]
+    t.addPolygon(
+        points_geo_polygon,
+        fill=False,
+        linewidth=4.0,
+        edgecolor=(36 / 255, 28 / 255, 143 / 255, 0.3),
+        linestyle="--",
+    )
+
 # 4.3 Add elevation graph
 t.addElevationGraph(height_pct=0.17, backgroundColor="white", backgroundColorAlpha=0.6)
 # 4.4 Plot points

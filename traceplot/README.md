@@ -52,6 +52,13 @@ t.addMarker(
     ),
     fontfamily="monospace",
 )
+t.addPolygon(
+    [PointGeo(2.1, 48.1, 10), PointGeo(2.1, 49.1, 20)],
+    fill=False,
+    linewidth=4.0,
+    edgecolor=(36/255, 28/255, 143/255, 0.3),
+    linestyle="--",
+)
 t.addElevationGraph(height_pct=0.17, backgroundColor="white", backgroundColorAlpha=0.6)
 t.plotPoints(format_string="-r", linewidth=6, alpha=.25)
 t.addTitle("Around Paris", center_x=0.5, center_y=0.2, fontsize=30, fontstyle="italic")

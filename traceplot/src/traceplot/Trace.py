@@ -8,8 +8,8 @@ from PIL import Image
 from traceplot.helpers.geo import pointGeoToPoint, getBoundingBox, addMarginToBbox
 from traceplot.helpers.graph import getTicksInt
 from traceplot.BackgroundImage import BackgroundImage
-from matplotlib.patches import Rectangle
-from numpy import linspace
+from matplotlib.patches import Rectangle, Polygon
+from numpy import linspace, array
 
 
 class Trace:
@@ -115,6 +115,10 @@ class Trace:
                 margin_right,
             )
         )
+
+    def addPolygon(self, points_geo: list[PointGeo], **kwargs) -> None:
+        point_px: list[PointGeo] = self._convertPointGeotoPx(points_geo)
+        self.ax.add_patch(Polygon(xy=array([[p[0], p[1]] for p in point_px]), **kwargs))
 
     def addElevationGraph(
         self,
