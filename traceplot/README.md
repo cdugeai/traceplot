@@ -45,6 +45,11 @@ t.addMarker(
     label_text="Start",
     marker_scale=0.5,
     label_offset_x=0.05,
+    label_box=dict(
+        boxstyle="round",
+        edgecolor=(1.0, 0.1, 0.4, 0.6),
+        facecolor=(1.0, 0.8, 0.8, .7),
+    )
 )
 t.addElevationGraph(height_pct=0.17, backgroundColor="white", backgroundColorAlpha=0.6)
 t.plotPoints(format_string="-r", linewidth=6, alpha=.25)

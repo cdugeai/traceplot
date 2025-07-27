@@ -2,6 +2,7 @@ from traceplot.types import BoundingBox, PointGeo, Point
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.axes import Axes
+from matplotlib.patches import FancyBboxPatch
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from PIL import Image
 from traceplot.helpers.geo import pointGeoToPoint, getBoundingBox, addMarginToBbox
@@ -50,6 +51,11 @@ class Trace:
         label_fontsize: int = 20,
         label_offset_x: float = 0,
         label_offset_y: float = 0,
+        label_box: FancyBboxPatch = dict(
+            boxstyle="round",
+            edgecolor=(1.0, 0.5, 0.5, 1.0),
+            facecolor=(1.0, 0.8, 0.8, 1.0),
+        ),
     ) -> None:
         minx, miny, maxx, maxy = self.background_bbox
         point_xy = pointGeoToPoint(point, minx, miny, maxx, maxy)
@@ -70,11 +76,7 @@ class Trace:
             point_xy[1] + label_offset_y,
             label_text,
             fontsize=label_fontsize,
-            bbox=dict(
-                boxstyle="round",
-                ec=(1.0, 0.5, 0.5),
-                fc=(1.0, 0.8, 0.8),
-            ),
+            bbox=label_box,
         )
         pass
 
@@ -229,7 +231,12 @@ class Trace:
         )
 
     def plotPoints(self, format_string, **kwargs) -> None:
-        self.ax.plot([p[0] for p in self.points_px], [p[1] for p in self.points_px], format_string, **kwargs)
+        self.ax.plot(
+            [p[0] for p in self.points_px],
+            [p[1] for p in self.points_px],
+            format_string,
+            **kwargs,
+        )
 
     def save(self, outfile_img_path: str) -> None:
         plt.savefig(

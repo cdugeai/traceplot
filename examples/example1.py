@@ -72,25 +72,33 @@ else:
     t.resizeBbox(margin_bottom=0.5, margin_left=0.1, margin_right=0.1, margin_top=0.0)
 
 # 4.2 Add start/end markers
+marker_box = dict(
+        boxstyle="round",
+        edgecolor=(255/255, 29/255, 110/255, 0.6),
+        #facecolor=(1.0, 0.8, 0.8, .7),
+        facecolor=(246/255, 246/255, 125/255, 0.84),
+    )
 t.addMarker(
     points_geo[0],
     img_path="img/marker_start.png",
-    label_text="debut",
+    label_text="Colombes",
     marker_scale=0.5,
     label_offset_x=0.05,
+    label_box=marker_box
 )
 t.addMarker(
     points_geo[-1],
     img_path="img/marker_finish.png",
-    label_text="fin",
+    label_text="Vitry",
     marker_scale=0.5,
     label_offset_x=0.05,
+    label_box=marker_box
 )
 # 4.3 Add elevation graph
 t.addElevationGraph(height_pct=0.17, backgroundColor="white", backgroundColorAlpha=0.6)
 # 4.4 Plot points
-t.plotPoints(format_string="-r", linewidth=10, alpha=.15)
-t.plotPoints(format_string="-r", linewidth=2, alpha=.85)
+t.plotPoints(format_string="-r", linewidth=10, alpha=0.15)
+t.plotPoints(format_string="-r", linewidth=2, alpha=0.85)
 # 4.5 Add title
 t.addTitle("Premier jour", center_x=0.5, center_y=0.2, fontsize=30)
 # 4.6 Save map to file
