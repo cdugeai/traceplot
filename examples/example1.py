@@ -73,18 +73,22 @@ else:
 
 # 4.2 Add start/end markers
 marker_box = dict(
-        boxstyle="round",
-        edgecolor=(255/255, 29/255, 110/255, 0.6),
-        #facecolor=(1.0, 0.8, 0.8, .7),
-        facecolor=(246/255, 246/255, 125/255, 0.84),
-    )
+    boxstyle="round",
+    edgecolor=(255 / 255, 29 / 255, 110 / 255, 0.6),
+    # facecolor=(1.0, 0.8, 0.8, .7),
+    facecolor=(246 / 255, 246 / 255, 125 / 255, 0.84),
+)
 t.addMarker(
     points_geo[0],
     img_path="img/marker_start.png",
     label_text="Colombes",
     marker_scale=0.5,
     label_offset_x=0.05,
-    label_box=marker_box
+    label_box=marker_box,
+    fontfamily="monospace",
+    fontstretch="extra-condensed",
+    fontstyle="italic",
+    fontweight="book",
 )
 t.addMarker(
     points_geo[-1],
@@ -92,7 +96,11 @@ t.addMarker(
     label_text="Vitry",
     marker_scale=0.5,
     label_offset_x=0.05,
-    label_box=marker_box
+    label_box=marker_box,
+    fontfamily="monospace",
+    fontstretch="extra-condensed",
+    fontstyle="italic",
+    fontweight="book",
 )
 # 4.3 Add elevation graph
 t.addElevationGraph(height_pct=0.17, backgroundColor="white", backgroundColorAlpha=0.6)

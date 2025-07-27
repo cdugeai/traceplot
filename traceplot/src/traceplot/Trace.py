@@ -56,6 +56,7 @@ class Trace:
             edgecolor=(1.0, 0.5, 0.5, 1.0),
             facecolor=(1.0, 0.8, 0.8, 1.0),
         ),
+        **kwargs,
     ) -> None:
         minx, miny, maxx, maxy = self.background_bbox
         point_xy = pointGeoToPoint(point, minx, miny, maxx, maxy)
@@ -77,6 +78,7 @@ class Trace:
             label_text,
             fontsize=label_fontsize,
             bbox=label_box,
+            **kwargs,
         )
         pass
 

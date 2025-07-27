@@ -49,7 +49,8 @@ t.addMarker(
         boxstyle="round",
         edgecolor=(1.0, 0.1, 0.4, 0.6),
         facecolor=(1.0, 0.8, 0.8, .7),
-    )
+    ),
+    fontfamily="monospace",
 )
 t.addElevationGraph(height_pct=0.17, backgroundColor="white", backgroundColorAlpha=0.6)
 t.plotPoints(format_string="-r", linewidth=6, alpha=.25)
