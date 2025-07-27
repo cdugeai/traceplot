@@ -89,11 +89,13 @@ t.addMarker(
 # 4.3 Add elevation graph
 t.addElevationGraph(height_pct=0.17, backgroundColor="white", backgroundColorAlpha=0.6)
 # 4.4 Plot points
-t.plotPoints()
+t.plotPoints(format_string="-r", linewidth=10, alpha=.15)
+t.plotPoints(format_string="-r", linewidth=2, alpha=.85)
 # 4.5 Add title
 t.addTitle("Premier jour", center_x=0.5, center_y=0.2, fontsize=30)
 # 4.6 Save map to file
 t.save("out/day_one.png")
+t.save("../images/premier_jour.png")
 # 4.7 Display map
 t.show()
 # 4.8 Close Trace

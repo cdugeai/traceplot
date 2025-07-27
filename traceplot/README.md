@@ -47,7 +47,7 @@ t.addMarker(
     label_offset_x=0.05,
 )
 t.addElevationGraph(height_pct=0.17, backgroundColor="white", backgroundColorAlpha=0.6)
-t.plotPoints()
+t.plotPoints(format_string="-r", linewidth=6, alpha=.25)
 t.addTitle("Around Paris", center_x=0.5, center_y=0.2, fontsize=30)
 t.save("out/day_one.png")
 t.show()

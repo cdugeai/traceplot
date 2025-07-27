@@ -228,8 +228,8 @@ class Trace:
             fontsize=fontsize,
         )
 
-    def plotPoints(self) -> None:
-        self.ax.plot([p[0] for p in self.points_px], [p[1] for p in self.points_px])
+    def plotPoints(self, format_string, **kwargs) -> None:
+        self.ax.plot([p[0] for p in self.points_px], [p[1] for p in self.points_px], format_string, **kwargs)
 
     def save(self, outfile_img_path: str) -> None:
         plt.savefig(
