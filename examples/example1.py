@@ -108,7 +108,18 @@ t.addElevationGraph(height_pct=0.17, backgroundColor="white", backgroundColorAlp
 t.plotPoints(format_string="-r", linewidth=10, alpha=0.15)
 t.plotPoints(format_string="-r", linewidth=2, alpha=0.85)
 # 4.5 Add title
-t.addTitle("Premier jour", center_x=0.5, center_y=0.2, fontsize=30)
+t.addTitle(
+    "Premier jour",
+    center_x=0.3,
+    center_y=0.2,
+    fontsize=20,
+    fontstyle="italic",
+    bbox=dict(
+        boxstyle="round",
+        edgecolor=(0.0, 0.0, 0.0, 0.3),
+        facecolor=(1.0, 1.0, 1.0, 0.8),
+    ),
+)
 # 4.6 Save map to file
 t.save("out/day_one.png")
 t.save("../images/premier_jour.png")

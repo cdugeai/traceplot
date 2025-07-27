@@ -220,7 +220,7 @@ class Trace:
         )
 
     def addTitle(
-        self, title: str, center_x: float, center_y: float, fontsize: int
+        self, title: str, center_x: float, center_y: float, fontsize: int, **kwargs
     ) -> None:
         self.ax.text(
             center_x,
@@ -230,6 +230,7 @@ class Trace:
             horizontalalignment="center",
             transform=self.ax.transAxes,
             fontsize=fontsize,
+            **kwargs,
         )
 
     def plotPoints(self, format_string, **kwargs) -> None:
